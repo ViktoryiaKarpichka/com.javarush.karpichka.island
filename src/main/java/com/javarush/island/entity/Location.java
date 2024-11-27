@@ -4,6 +4,7 @@ import com.javarush.island.entity.animals.Animal;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class Location {
     private int coordinateY;
     private List<Organism> organisms;
 
-    public Location(int coordinateX, int coordinateY, List<Organism> organisms) {
+    public Location(int coordinateX, int coordinateY) {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.organisms = new ArrayList<>();

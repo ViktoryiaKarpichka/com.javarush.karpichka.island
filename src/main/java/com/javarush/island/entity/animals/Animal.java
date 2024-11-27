@@ -1,6 +1,5 @@
 package com.javarush.island.entity.animals;
 
-import com.javarush.island.configuration.EatingProbabilityConfig;
 import com.javarush.island.entity.Location;
 import com.javarush.island.entity.Organism;
 import com.javarush.island.interfaces.Eatable;
@@ -12,6 +11,10 @@ import com.javarush.island.util.EatingProbabilityUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+
+import static com.javarush.island.configuration.EatingProbabilityConfig.*;
+import static com.javarush.island.configuration.EatingProbabilityConfig.getProbability;
+import static com.javarush.island.util.AnimalUtil.*;
 
 @Setter
 @Getter
@@ -31,9 +34,10 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
 
     @Override
     public void eat(Organism prey) {
-        if (EatingProbabilityUtil.eatingProbabilityConfig.canEat(this, prey) &&
+        EatingProbabilityUtil.getEatingProbabilityConfig();
+        if (canEat(this, prey) &&
                 this.getActualSatiety() <= this.getMaxSatiety()) {
-            if (Math.random() * 100 > EatingProbabilityConfig.getProbability(this, prey)) {
+            if (Math.random() * 100 > getProbability(this, prey)) {
                 System.out.println(this.getName() + " съел " + prey.getName());
                 this.setActualSatiety(increaseSatiety());
             } else {
@@ -57,11 +61,11 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     public double increaseSatiety() {
-        return this.actualSatiety - this.getMaxSatiety() * AnimalUtil.satietyReductionFactor;
+        return this.actualSatiety - (this.getMaxSatiety() * satietyReductionFactor);
     }
 
     public double decreaseSatiety() {
-        return this.actualSatiety - this.getMaxSatiety() * AnimalUtil.satietyReductionFactor;
+        return this.actualSatiety - (this.getMaxSatiety() * satietyReductionFactor);
     }
 
     //должен определить в какую локацию МОЖНО идти

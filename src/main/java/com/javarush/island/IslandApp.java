@@ -1,5 +1,6 @@
 package com.javarush.island;
 
+import com.javarush.island.entity.Island;
 import com.javarush.island.entity.Location;
 import com.javarush.island.entity.animals.herbivores.Caterpillar;
 import com.javarush.island.entity.animals.herbivores.Duck;
@@ -12,6 +13,8 @@ import static com.javarush.island.util.OrganismFactory.createOrganism;
 public class IslandApp {
     public static void main(String[] args) {
         Location location = new Location();
+        Island island = new Island();
+        island.createLocations();
 
         // пока просто вывожу в консоль
         Wolf wolf = (Wolf) createOrganism(WOLF);

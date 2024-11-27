@@ -1,0 +1,112 @@
+animals:
+  Wolf:
+    name: "Wolf"
+    weight: 50.0
+    maxCountPerCell: 30
+    maxSpeed: 3
+    maxSatiety: 8.0
+
+  Boa:
+    name: "Boa"
+    weight: 15.0
+    maxCountPerCell: 30
+    maxSpeed: 1
+    maxSatiety: 3.0
+
+  Fox:
+    name: "Fox"
+    weight: 8.0
+    maxCountPerCell: 30
+    maxSpeed: 2
+    maxSatiety: 2.0
+
+  Bear:
+    name: "Bear"
+    weight: 500.0
+    maxCountPerCell: 5
+    maxSpeed: 2
+    maxSatiety: 80.0
+
+  Eagle:
+    name: "Eagle"
+    weight: 6.0
+    maxCountPerCell: 20
+    maxSpeed: 3
+    maxSatiety: 1.0
+
+  Horse:
+    name: "Horse"
+    weight: 400.0
+    maxCountPerCell: 20
+    maxSpeed: 4
+    maxSatiety: 60.0
+
+  Deer:
+    name: "Deer"
+    weight: 300.0
+    maxCountPerCell: 20
+    maxSpeed: 4
+    maxSatiety: 50.0
+
+  Rabbit:
+    name: "Rabbit"
+    weight: 2.0
+    maxCountPerCell: 150
+    maxSpeed: 2
+    maxSatiety: 0.45
+
+  Mouse:
+    name: "Mouse"
+    weight: 0.05
+    maxCountPerCell: 500
+    maxSpeed: 1
+    maxSatiety: 0.01
+
+  Goat:
+    name: "Goat"
+    weight: 60.0
+    maxCountPerCell: 140
+    maxSpeed: 3
+    maxSatiety: 10.0
+
+  Sheep:
+    name: "Sheep"
+    weight: 70.0
+    maxCountPerCell: 140
+    maxSpeed: 3
+    maxSatiety: 15.0
+
+  Boar:
+    name: "Boar"
+    weight: 400.0
+    maxCountPerCell: 50
+    maxSpeed: 2
+    maxSatiety: 50.0
+
+  Buffalo:
+    name: "Buffalo"
+    weight: 700.0
+    maxCountPerCell: 10
+    maxSpeed: 3
+    maxSatiety: 100.0
+
+  Duck:
+    name: "Duck"
+    weight: 1.0
+    maxCountPerCell: 200
+    maxSpeed: 4
+    maxSatiety: 0.15
+
+  Caterpillar:
+    name: "Caterpillar"
+    weight: 0.01
+    maxCountPerCell: 1000
+    maxSpeed: 0
+    maxSatiety: 0.0
+
+
+plants:
+  Plant:
+    name: "Plant"
+    weight: 1.0
+    maxCountPerCell: 200

@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static com.javarush.island.configuration.EatingProbabilityConfig.canEat;
@@ -39,7 +40,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     public void eat(Organism prey) {
         EatingProbabilityUtil.getEatingProbabilityConfig();
         if (canEat(this, prey) &&
-                this.getActualSatiety() <= this.getMaxSatiety()) {
+                this.actualSatiety <= this.maxSatiety) {
             if (Math.random() * 100 > getProbability(this, prey)) {
                 System.out.println(this.getName() + " съел " + prey.getName());
                 this.setActualSatiety(increaseSatiety());
@@ -105,31 +106,37 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
         }
     }
 
-    // размножаться (при наличии пары в их локации),
-    @Override
-    public void reproduce() {
-//        Location currentLocation = IslandUtil.getLocationForAnimal(this);
-//        if (currentLocation == null) return;
-//
-//        List<Animal> sameSpecies = currentLocation.getAnimals().stream()
-//                .filter(animal -> animal.getClass().equals(this.getClass()))
-//                .collect(Collectors.toList());
-//
-//        if (sameSpecies.size() >= 2 && sameSpecies.size() < this.getMaxCountPerCell()) {
-//            Animal offspring = this.createOffspring();
-//            currentLocation.addOrganism(offspring);
-//            IslandUtil.updateLocationForAnimal(offspring, currentLocation);
-//            System.out.println(this.getName() + " размножился!");
-//        }
-
-    }
-
     public double increaseSatiety() {
-        return this.actualSatiety - (this.getMaxSatiety() * satietyReductionFactor);
+        return this.actualSatiety + (this.maxSatiety * satietyReductionFactor);
     }
 
     public double decreaseSatiety() {
-        return this.actualSatiety - (this.getMaxSatiety() * satietyReductionFactor);
+        return this.actualSatiety - (this.maxSatiety * satietyReductionFactor);
     }
 
+    @Override
+    public void reproduce(Location currentLocation) {
+        if (!currentLocation.canAddOrganism(this)) {
+            return;
+        }
+
+        List<Animal> sameSpecies = currentLocation.getAnimals().stream()
+                .filter(animal -> animal.getClass().equals(this.getClass()))
+                .toList();
+
+        if (sameSpecies.size() > 1) {
+            try {
+                Animal offspring = (Animal) this.clone();
+                currentLocation.addOrganism(offspring);
+            } catch (CloneNotSupportedException e) {
+                throw new RuntimeException();
+            }
+        }
+    }
+
+    void die(Location currentLocation) {
+        if (this.getWeight() <= 0 || this.actualSatiety <= 0) {
+            currentLocation.getCurrentLocationOfOrganism(this).removeOrganism(this);
+        }
+    }
 }

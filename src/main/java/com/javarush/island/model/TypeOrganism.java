@@ -11,7 +11,7 @@ public enum TypeOrganism {
     DEER("Deer"),
     DUCK("Duck"),
     GOAT("Goat"),
-    HOG("Hog"),
+    BOAR("Boar"),
     HORSE("Horse"),
     MOUSE("Mouse"),
     RABBIT("Rabbit"),

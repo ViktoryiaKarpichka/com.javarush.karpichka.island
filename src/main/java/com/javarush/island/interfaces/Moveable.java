@@ -1,8 +1,8 @@
 package com.javarush.island.interfaces;
 
-import com.javarush.island.model.Direction;
+import com.javarush.island.entity.Island;
 
 public interface Moveable {
 
-    void move(Direction direction);
+    void move(Island island);
 }

@@ -6,7 +6,8 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class IslandUtil {
-    public static IslandConfig islandConfig;
+    public static  IslandConfig islandConfig;
+    public static final Island island = new Island();
 
     public static IslandConfig getIslandConfig() {
         if (islandConfig == null) {
@@ -18,4 +19,5 @@ public class IslandUtil {
         }
         return islandConfig;
     }
+
 }

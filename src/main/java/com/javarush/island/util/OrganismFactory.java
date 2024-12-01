@@ -25,7 +25,7 @@ public class OrganismFactory {
             case DEER -> animalConfig.createOrganism(Deer.class);
             case DUCK -> animalConfig.createOrganism(Duck.class);
             case GOAT -> animalConfig.createOrganism(Goat.class);
-            case HOG -> animalConfig.createOrganism(Hog.class);
+            case BOAR -> animalConfig.createOrganism(Boar.class);
             case HORSE -> animalConfig.createOrganism(Horse.class);
             case MOUSE -> animalConfig.createOrganism(Mouse.class);
             case RABBIT -> animalConfig.createOrganism(Rabbit.class);

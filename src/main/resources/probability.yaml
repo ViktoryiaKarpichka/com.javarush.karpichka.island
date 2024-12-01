@@ -6,7 +6,7 @@ eatingProbability:
     Mouse: 80
     Goat: 80
     Sheep: 70
-    Hog: 15
+    Boar: 15
     Buffalo: 10
     Duck: 40
   Boa:
@@ -24,7 +24,7 @@ eatingProbability:
     Mouse: 90
     Goat: 70
     Sheep: 70
-    Hog: 50
+    Boar: 50
     Buffalo: 20
     Duck: 10
   Eagle:
@@ -40,7 +40,7 @@ eatingProbability:
     Plant: 100
   Sheep:
     Plant: 100
-  Hog:
+  Boar:
     Plant: 100
   Buffalo:
     Plant: 100

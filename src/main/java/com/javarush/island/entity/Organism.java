@@ -9,13 +9,14 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 @AllArgsConstructor
-public abstract class Organism {
+public abstract class Organism implements Cloneable{
     private String name;
     private double weight;
     private int maxCountPerCell;
 
-    // умирать от голода или быть съеденными.
-    void die() {
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

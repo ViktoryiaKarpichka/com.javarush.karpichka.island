@@ -1,13 +1,11 @@
 package com.javarush.island.util;
 
 import com.javarush.island.configuration.IslandConfig;
-import com.javarush.island.entity.Island;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class IslandUtil {
-    public static  IslandConfig islandConfig;
-    public static final Island island = new Island();
+    private static  IslandConfig islandConfig;
 
     public static IslandConfig getIslandConfig() {
         if (islandConfig == null) {
@@ -19,5 +17,4 @@ public class IslandUtil {
         }
         return islandConfig;
     }
-
 }

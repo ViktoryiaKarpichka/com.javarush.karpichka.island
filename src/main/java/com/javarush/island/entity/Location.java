@@ -7,7 +7,9 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -29,6 +31,7 @@ public class Location {
     public void removeOrganism(Organism organism) {
         organisms.remove(organism);
     }
+
     public Location getCurrentLocationOfOrganism(Organism organism) {
         if (organisms.contains(organism)) {
             return this;
@@ -53,5 +56,13 @@ public class Location {
                 .filter(o -> o.getClass().equals(organism.getClass()))
                 .count();
         return sameTypeCount < organism.getMaxCountPerCell();
+    }
+
+    public Map<Class<? extends Organism>, Long> getOrganismStatistics() {
+        return organisms.stream()
+                .collect(Collectors.groupingBy(
+                        Organism::getClass,
+                        Collectors.counting()
+                ));
     }
 }

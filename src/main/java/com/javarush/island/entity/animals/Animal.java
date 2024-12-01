@@ -3,6 +3,8 @@ package com.javarush.island.entity.animals;
 import com.javarush.island.entity.Island;
 import com.javarush.island.entity.Location;
 import com.javarush.island.entity.Organism;
+import com.javarush.island.entity.animals.herbivores.Herbivores;
+import com.javarush.island.entity.animals.predators.Predators;
 import com.javarush.island.interfaces.Eatable;
 import com.javarush.island.interfaces.Moveable;
 import com.javarush.island.interfaces.Reproducible;
@@ -27,7 +29,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
 
     private int maxSpeed;
     private final double maxSatiety;
-    private double actualSatiety;  // (Фактическая сытость) - в течение ЖЦ животного, значение этого поля должно уменьшаться (или увеличиваться когда поел)
+    private double actualSatiety;
 
     public Animal(String name, double weight, int maxCountPerCell, int maxSpeed, double maxSatiety, double actualSatiety) {
         super(name, weight, maxCountPerCell);
@@ -37,19 +39,62 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     @Override
-    public void eat(Organism prey) {
+    public void eat(Location currentLocation) {
         EatingProbabilityUtil.getEatingProbabilityConfig();
-        if (canEat(this, prey) &&
-                this.actualSatiety <= this.maxSatiety) {
-            if (Math.random() * 100 > getProbability(this, prey)) {
-                System.out.println(this.getName() + " съел " + prey.getName());
-                this.setActualSatiety(increaseSatiety());
-            } else {
-                System.out.println(this.getName() + " не смог съесть " + prey.getName());
-                this.setActualSatiety(decreaseSatiety());
+
+        if (this instanceof Herbivores) {
+            currentLocation.getPlants().stream()
+                    .filter(plant -> plant.getQuantity() > 0)
+                    .findFirst()
+                    .ifPresentOrElse(plant -> {
+                            System.out.println(this.getName() + " ate up a plant.");
+                            this.setActualSatiety(increaseSatiety());
+                            this.increaseWeight();
+                            plant.decreaseQuantity();
+                            currentLocation.removeOrganism(plant);
+                    }, () -> handleFailedEating(currentLocation));
+        } else if (this instanceof Predators) {
+
+            currentLocation.getAnimals().stream()
+                    .filter(prey -> prey != this && canEat(this, prey))
+                    .skip(ThreadLocalRandom.current().nextInt(currentLocation.getAnimals().size()))
+                    .findAny()
+                    .ifPresentOrElse(prey -> {
+                        int i = ThreadLocalRandom.current().nextInt(100);
+                        System.out.println(i);
+                        if (i > getProbability(this, prey)) {
+                            System.out.println(this.getName() + " ate up " + prey.getName());
+                            this.setActualSatiety(increaseSatiety());
+                            this.increaseWeight();
+                            currentLocation.removeOrganism(prey);
+                        } else {
+                            System.out.println(prey);
+                            handleFailedEating(currentLocation);
+                        }
+                    }, () -> handleFailedEating(currentLocation));
+        }
+    }
+
+    private void handleFailedEating(Location currentLocation) {
+        System.out.println(this.getName() + " found nothing to eat.");
+        this.setActualSatiety(decreaseSatiety());
+        this.decreaseWeight();
+        if (this.getActualSatiety() <= 0 || this.getWeight() <= 0) {
+            System.out.println(this.getName() + " died of hunger.");
+            if (currentLocation != null) {
+                currentLocation.removeOrganism(this);
             }
         }
     }
+
+    public void increaseWeight() {
+        this.setWeight(this.getWeight() + this.getWeight() / 5);
+    }
+
+    public void decreaseWeight() {
+        this.setWeight(this.getWeight() - this.getWeight() / 5);
+    }
+
 
     public Direction chooseDirection() {
         Direction[] directions = Direction.values();
@@ -87,7 +132,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
             }
 
             if (!island.isValidCoordinate(targetX, targetY)) {
-                break; // Достигли края острова, перемещение остановлено
+                break;
             }
 
             Location targetLocation = island.getLocation(targetX, targetY);
@@ -131,12 +176,6 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException();
             }
-        }
-    }
-
-    void die(Location currentLocation) {
-        if (this.getWeight() <= 0 || this.actualSatiety <= 0) {
-            currentLocation.getCurrentLocationOfOrganism(this).removeOrganism(this);
         }
     }
 }

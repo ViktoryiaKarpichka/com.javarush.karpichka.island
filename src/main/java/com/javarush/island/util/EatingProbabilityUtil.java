@@ -6,7 +6,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class EatingProbabilityUtil {
-    public static EatingProbabilityConfig eatingProbabilityConfig;
+    private static EatingProbabilityConfig eatingProbabilityConfig;
 
     public static void getEatingProbabilityConfig() {
         if (eatingProbabilityConfig == null) {

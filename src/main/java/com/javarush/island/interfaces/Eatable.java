@@ -1,9 +1,9 @@
 package com.javarush.island.interfaces;
 
-import com.javarush.island.entity.Organism;
+import com.javarush.island.entity.Location;
 
 public interface Eatable {
 
-    void eat(Organism prey);
+    void eat(Location location);
 
 }

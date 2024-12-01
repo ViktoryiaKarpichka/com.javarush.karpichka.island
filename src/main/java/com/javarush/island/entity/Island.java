@@ -11,14 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@Getter
 @Setter
+@Getter
 public class Island {
-    private int widthIsland;
-    private int lengthIsland;
-    private Location[][] locations;
+    private final int widthIsland;
+    private final int lengthIsland;
+    private final Location[][] locations;
 
-    //get config param
     public Island() {
         IslandConfig config = IslandUtil.getIslandConfig();
         this.widthIsland = config.getWidth();
@@ -27,15 +26,15 @@ public class Island {
     }
 
     public void createLocations() {
-        for (int row = 0; row < getLengthIsland(); row++) {
-            for (int column = 0; column < getWidthIsland(); column++) {
+        for (int row = 0; row <lengthIsland; row++) {
+            for (int column = 0; column < widthIsland; column++) {
                 locations[row][column] = new Location(row, column);
             }
         }
     }
 
     public void fillingLocations() {
-        for (int row = 0; row < getLengthIsland(); row++) {
+        for (int row = 0; row < lengthIsland; row++) {
             for (int column = 0; column < widthIsland; column++) {
                 String typeOrganism = "";
                 for (TypeOrganism types : TypeOrganism.values()) {

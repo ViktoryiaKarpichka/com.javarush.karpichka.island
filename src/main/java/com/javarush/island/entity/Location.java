@@ -2,14 +2,15 @@ package com.javarush.island.entity;
 
 import com.javarush.island.entity.animals.Animal;
 import com.javarush.island.entity.animals.plants.Plant;
+import com.javarush.island.model.Direction;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -18,6 +19,7 @@ public class Location {
     private int coordinateX;
     private int coordinateY;
     private final List<Organism> organisms = new CopyOnWriteArrayList<>();
+    private final Map<Direction, Location> neighbors = new EnumMap<>(Direction.class);
 
     public Location(int coordinateX, int coordinateY) {
         this.coordinateX = coordinateX;
@@ -39,6 +41,14 @@ public class Location {
         return null;
     }
 
+    public void setNeighbor(Direction direction, Location neighbor) {
+        neighbors.put(direction, neighbor);
+    }
+
+    public Location getNeighbor(Direction direction) {
+        return neighbors.get(direction);
+    }
+
     public List<Animal> getAnimals() {
         return organisms.stream()
                 .filter(organism -> organism instanceof Animal)
@@ -56,13 +66,5 @@ public class Location {
                 .filter(o -> o.getClass().equals(organism.getClass()))
                 .count();
         return sameTypeCount < organism.getMaxCountPerCell();
-    }
-
-    public Map<Class<? extends Organism>, Long> getOrganismStatistics() {
-        return organisms.stream()
-                .collect(Collectors.groupingBy(
-                        Organism::getClass,
-                        Collectors.counting()
-                ));
     }
 }

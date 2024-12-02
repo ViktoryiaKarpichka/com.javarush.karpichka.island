@@ -14,7 +14,6 @@ public abstract class Organism implements Cloneable{
     private double weight;
     private int maxCountPerCell;
 
-
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();

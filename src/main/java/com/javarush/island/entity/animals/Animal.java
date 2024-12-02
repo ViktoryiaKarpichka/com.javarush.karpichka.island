@@ -1,6 +1,5 @@
 package com.javarush.island.entity.animals;
 
-import com.javarush.island.entity.Island;
 import com.javarush.island.entity.Location;
 import com.javarush.island.entity.Organism;
 import com.javarush.island.entity.animals.herbivores.Herbivores;
@@ -14,7 +13,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -60,9 +58,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                     .skip(ThreadLocalRandom.current().nextInt(currentLocation.getAnimals().size()))
                     .findAny()
                     .ifPresentOrElse(prey -> {
-                        int i = ThreadLocalRandom.current().nextInt(100);
-                        System.out.println(i);
-                        if (i > getProbability(this, prey)) {
+                        if (ThreadLocalRandom.current().nextInt(100) > getProbability(this, prey)) {
                             System.out.println(this.getName() + " ate up " + prey.getName());
                             this.setActualSatiety(increaseSatiety());
                             this.increaseWeight();
@@ -102,54 +98,33 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     @Override
-    public void move(Island island) {
-        Location currentLocation = null;
-        for (Location[] row : island.getLocations()) {
-            currentLocation = Arrays.stream(row)
-                    .filter(location -> location.getCurrentLocationOfOrganism(this) != null)
-                    .findFirst()
-                    .orElse(null);
-            if (currentLocation != null) break;
-        }
+    public void move(Location currentLocation) {
 
-        if (currentLocation == null) {
-            throw new IllegalStateException("Organism not found");
-        }
-
-        int currentX = currentLocation.getCoordinateX();
-        int currentY = currentLocation.getCoordinateY();
-        int stepsRemaining = ThreadLocalRandom.current().nextInt(maxSpeed + 1);
+        int stepsRemaining = ThreadLocalRandom.current().nextInt(0, maxSpeed + 1);
 
         while (stepsRemaining > 0) {
-            int targetX = currentX;
-            int targetY = currentY;
+            Direction direction = chooseDirection();
+            Location targetLocation = currentLocation.getNeighbor(direction);
 
-            switch (chooseDirection()) {
-                case UP -> targetY -= 1;
-                case DOWN -> targetY += 1;
-                case LEFT -> targetX -= 1;
-                case RIGHT -> targetX += 1;
-            }
-
-            if (!island.isValidCoordinate(targetX, targetY)) {
+            if (targetLocation == null) {
+                System.out.println(this.getName() + " cannot move outside boundaries.");
                 break;
             }
-
-            Location targetLocation = island.getLocation(targetX, targetY);
 
             if (targetLocation.canAddOrganism(this)) {
                 currentLocation.removeOrganism(this);
                 targetLocation.addOrganism(this);
-
-                currentX = targetX;
-                currentY = targetY;
+                System.out.println(this.getName() + " moved to a new location.");
                 currentLocation = targetLocation;
             } else {
+                System.out.println(this.getName() + " cannot move to a full location.");
                 break;
             }
+
             stepsRemaining--;
         }
     }
+
 
     public double increaseSatiety() {
         return this.actualSatiety + (this.maxSatiety * satietyReductionFactor);
@@ -162,6 +137,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     @Override
     public void reproduce(Location currentLocation) {
         if (!currentLocation.canAddOrganism(this)) {
+            System.out.println("there is no space for the animal");
             return;
         }
 
@@ -173,9 +149,13 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
             try {
                 Animal offspring = (Animal) this.clone();
                 currentLocation.addOrganism(offspring);
+                System.out.println(this.getName() + "the animal has successfully reproduced");
             } catch (CloneNotSupportedException e) {
-                throw new RuntimeException();
+                System.out.println(this.getName() + "the animal has not reproduced");
             }
+
+        } else {
+            System.out.println(this.getName() + "the animal has not couple");
         }
     }
 }

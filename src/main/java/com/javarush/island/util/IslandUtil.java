@@ -7,6 +7,7 @@ import lombok.experimental.UtilityClass;
 public class IslandUtil {
     private static  IslandConfig islandConfig;
 
+
     public static IslandConfig getIslandConfig() {
         if (islandConfig == null) {
             synchronized (IslandUtil.class) {

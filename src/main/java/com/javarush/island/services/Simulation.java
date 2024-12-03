@@ -21,6 +21,7 @@ public class Simulation {
     }
 
     public void run(int days) {
+        statistic.printStats();
         for (int day = 1; day <= days; day++) {
             System.out.println("Day " + day + " starts:");
             simulateDay();
@@ -36,8 +37,9 @@ public class Simulation {
 
     private void simulateDay() {
         for (int row = 0; row < island.getLengthIsland(); row++) {
-            for (int column = 0; column < island.getWidthIsland(); column++) {
-                Location location = island.getLocation(row, column);
+            int rowLength = island.getRowLength(row); // Длина текущей строки
+            for (int column = 0; column < rowLength; column++) {
+                Location location = island.getLocation(column, row);
                 processLocation(location);
             }
         }
@@ -49,7 +51,7 @@ public class Simulation {
             if (organism instanceof Animal animal) {
                 animal.eat(location);
                 animal.reproduce(location);
-                animal.move(location);
+               animal.move(location);
             } else if (organism instanceof Plant plant) {
                 plant.reproduce(location);
             }

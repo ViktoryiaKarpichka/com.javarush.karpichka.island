@@ -14,17 +14,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Plant extends Organism implements Reproducible {
-    private int quantity ;
 
-    public Plant(String name, double weight, int maxCountPerCell, int quantity) {
+    public Plant(String name, double weight, int maxCountPerCell) {
         super(name, weight, maxCountPerCell);
-        this.quantity = quantity;
     }
 
-    public void decreaseQuantity() {
-        if (quantity > 0) {
-            quantity--;
-        }
+    public void decreaseWeight() {
+        this.setWeight(this.getWeight() / 2);
     }
 
     @Override

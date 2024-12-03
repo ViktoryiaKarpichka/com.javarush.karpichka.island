@@ -3,7 +3,7 @@ package com.javarush.island.entity;
 import com.javarush.island.configuration.IslandConfig;
 import com.javarush.island.model.Direction;
 import com.javarush.island.model.TypeOrganism;
-import com.javarush.island.util.IslandUtil;
+import com.javarush.island.util.IslandConfigUtil;
 import com.javarush.island.util.OrganismFactory;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +18,7 @@ public class Island {
     private final Location[][] locations;
 
     public Island() {
-        IslandConfig config = IslandUtil.getIslandConfig();
+        IslandConfig config = IslandConfigUtil.getIslandConfig();
         this.widthIsland = config.getWidth();
         this.lengthIsland = config.getHeight();
         this.locations = new Location[lengthIsland][widthIsland];
@@ -49,11 +49,10 @@ public class Island {
     public void fillingLocations() {
         for (int row = 0; row < lengthIsland; row++) {
             for (int column = 0; column < widthIsland; column++) {
-                StringBuilder typeOrganism = new StringBuilder();
-
+                StringBuilder typeOrganism = new StringBuilder("");
                 for (TypeOrganism type : TypeOrganism.values()) {
                     Organism sampleOrganism = OrganismFactory.createOrganism(type);
-                    int randomCount = ThreadLocalRandom.current().nextInt(1, sampleOrganism.getMaxCountPerCell() + 1);
+                    int randomCount = ThreadLocalRandom.current().nextInt(0, sampleOrganism.getMaxCountPerCell() / 2);
 
                     for (int i = 0; i < randomCount; i++) {
                         try {
@@ -62,14 +61,23 @@ public class Island {
                             throw new RuntimeException(e);
                         }
                     }
-//                    typeOrganism.append(sampleOrganism.getClass().getSimpleName())
-//                            .append("-")
-//                            .append(randomCount)
-//                            .append(" ");
+                    typeOrganism.append(sampleOrganism.getClass().getSimpleName())
+                            .append("-")
+                            .append(randomCount)
+                            .append(" ");
                 }
-//                System.out.print("[ " + typeOrganism + "]" + "\n");
+                System.out.print("[ " + typeOrganism + "]" + "\n");
+            }System.out.println();
+        }
+    }
+        public void debugIslandContent() {
+        for (int row = 0; row < lengthIsland; row++) {
+            for (int column = 0; column < widthIsland; column++) {
+                Location location = locations[row][column];
+                System.out.println("Cell (" + row + ", " + column + ") contains: " +
+                        location.getAnimals().size() + " animals, " +
+                        location.getPlants().size() + " plants.");
             }
-//            System.out.println();
         }
     }
 

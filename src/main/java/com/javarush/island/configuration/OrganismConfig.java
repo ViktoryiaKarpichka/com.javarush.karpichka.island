@@ -6,7 +6,6 @@ import com.javarush.island.entity.plants.Plant;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings("unchecked")
 public class OrganismConfig {
@@ -45,10 +44,9 @@ public class OrganismConfig {
 
                 double weight = (double) config.get("weight");
                 int maxCountPerCell = (int) config.get("maxCountPerCell");
-                int quantity = ThreadLocalRandom.current().nextInt(maxCountPerCell, maxCountPerCell * 100);
 
-                Constructor<T> constructor = organismClass.getConstructor(String.class, double.class, int.class, int.class);
-                return constructor.newInstance(key, weight, maxCountPerCell, quantity);
+                Constructor<T> constructor = organismClass.getConstructor(String.class, double.class, int.class);
+                return constructor.newInstance(key, weight, maxCountPerCell);
             } else if (Animal.class.isAssignableFrom(organismClass)) {
 
                 double weight = (double) config.get("weight");

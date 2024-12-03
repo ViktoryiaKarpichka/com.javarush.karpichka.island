@@ -26,7 +26,7 @@ public class Island {
         linkNeighbors();
     }
 
-    private void createLocations() {
+    public void createLocations() {
         for (int row = 0; row < lengthIsland; row++) {
             for (int column = 0; column < widthIsland; column++) {
                 locations[row][column] = new Location(row, column);
@@ -34,7 +34,7 @@ public class Island {
         }
     }
 
-    private void linkNeighbors() {
+    public void linkNeighbors() {
         for (int row = 0; row < lengthIsland; row++) {
             for (int column = 0; column < widthIsland; column++) {
                 Location current = locations[row][column];
@@ -62,16 +62,15 @@ public class Island {
                             throw new RuntimeException(e);
                         }
                     }
-                    typeOrganism.append(sampleOrganism.getClass().getSimpleName())
-                            .append("-")
-                            .append(randomCount)
-                            .append(" ");
+//                    typeOrganism.append(sampleOrganism.getClass().getSimpleName())
+//                            .append("-")
+//                            .append(randomCount)
+//                            .append(" ");
                 }
-                System.out.print("[ " + typeOrganism.toString().trim() + " ]");
+//                System.out.print("[ " + typeOrganism + "]" + "\n");
             }
-            System.out.println();
+//            System.out.println();
         }
-        linkNeighbors(); // Warning! set neighbors
     }
 
     public Location getLocation(int x, int y) {

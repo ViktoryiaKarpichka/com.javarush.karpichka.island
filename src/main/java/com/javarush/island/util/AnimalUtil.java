@@ -4,5 +4,5 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class AnimalUtil {
-    public static final double satietyReductionFactor = 0.2;
+    public static final double satietyReductionFactor = 0.5;
 }

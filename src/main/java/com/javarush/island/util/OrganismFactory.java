@@ -3,7 +3,7 @@ package com.javarush.island.util;
 import com.javarush.island.configuration.OrganismConfig;
 import com.javarush.island.entity.Organism;
 import com.javarush.island.entity.animals.herbivores.*;
-import com.javarush.island.entity.animals.plants.Plant;
+import com.javarush.island.entity.plants.Plant;
 import com.javarush.island.entity.animals.predators.*;
 import com.javarush.island.model.TypeOrganism;
 import lombok.experimental.UtilityClass;

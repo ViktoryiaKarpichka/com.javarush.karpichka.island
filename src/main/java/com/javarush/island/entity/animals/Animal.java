@@ -45,7 +45,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                     .filter(plant -> plant.getQuantity() > 0)
                     .findFirst()
                     .ifPresentOrElse(plant -> {
-                            System.out.println(this.getName() + " ate up a plant.");
+                          //  System.out.println(this.getName() + " ate up a plant.");
                             this.setActualSatiety(increaseSatiety());
                             this.increaseWeight();
                             plant.decreaseQuantity();
@@ -59,12 +59,12 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                     .findAny()
                     .ifPresentOrElse(prey -> {
                         if (ThreadLocalRandom.current().nextInt(100) > getProbability(this, prey)) {
-                            System.out.println(this.getName() + " ate up " + prey.getName());
+                           // System.out.println(this.getName() + " ate up " + prey.getName());
                             this.setActualSatiety(increaseSatiety());
                             this.increaseWeight();
                             currentLocation.removeOrganism(prey);
                         } else {
-                            System.out.println(prey);
+                         //   System.out.println(prey);
                             handleFailedEating(currentLocation);
                         }
                     }, () -> handleFailedEating(currentLocation));
@@ -72,11 +72,11 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     private void handleFailedEating(Location currentLocation) {
-        System.out.println(this.getName() + " found nothing to eat.");
+       // System.out.println(this.getName() + " found nothing to eat.");
         this.setActualSatiety(decreaseSatiety());
         this.decreaseWeight();
         if (this.getActualSatiety() <= 0 || this.getWeight() <= 0) {
-            System.out.println(this.getName() + " died of hunger.");
+          //  System.out.println(this.getName() + " died of hunger.");
             if (currentLocation != null) {
                 currentLocation.removeOrganism(this);
             }
@@ -84,11 +84,11 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     public void increaseWeight() {
-        this.setWeight(this.getWeight() + this.getWeight() / 5);
+        this.setWeight(this.getWeight() + this.getWeight() / 2);
     }
 
     public void decreaseWeight() {
-        this.setWeight(this.getWeight() - this.getWeight() / 5);
+        this.setWeight(this.getWeight() - this.getWeight() / 2);
     }
 
 
@@ -107,24 +107,22 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
             Location targetLocation = currentLocation.getNeighbor(direction);
 
             if (targetLocation == null) {
-                System.out.println(this.getName() + " cannot move outside boundaries.");
+              //  System.out.println(this.getName() + " cannot move outside boundaries.");
                 break;
             }
 
             if (targetLocation.canAddOrganism(this)) {
                 currentLocation.removeOrganism(this);
                 targetLocation.addOrganism(this);
-                System.out.println(this.getName() + " moved to a new location.");
+              //  System.out.println(this.getName() + " moved to a new location.");
                 currentLocation = targetLocation;
             } else {
-                System.out.println(this.getName() + " cannot move to a full location.");
+              //  System.out.println(this.getName() + " cannot move to a full location.");
                 break;
             }
-
             stepsRemaining--;
         }
     }
-
 
     public double increaseSatiety() {
         return this.actualSatiety + (this.maxSatiety * satietyReductionFactor);
@@ -137,7 +135,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     @Override
     public void reproduce(Location currentLocation) {
         if (!currentLocation.canAddOrganism(this)) {
-            System.out.println("there is no space for the animal");
+         //   System.out.println("there is no space for the animal");
             return;
         }
 
@@ -149,13 +147,13 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
             try {
                 Animal offspring = (Animal) this.clone();
                 currentLocation.addOrganism(offspring);
-                System.out.println(this.getName() + "the animal has successfully reproduced");
+             //   System.out.println(this.getName() + "the animal has successfully reproduced");
             } catch (CloneNotSupportedException e) {
-                System.out.println(this.getName() + "the animal has not reproduced");
+              //  System.out.println(this.getName() + "the animal has not reproduced");
             }
 
         } else {
-            System.out.println(this.getName() + "the animal has not couple");
+          //  System.out.println(this.getName() + " the animal has not couple");
         }
     }
 }

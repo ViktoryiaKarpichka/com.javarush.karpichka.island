@@ -4,12 +4,13 @@ import com.javarush.island.entity.Island;
 import com.javarush.island.entity.Location;
 import com.javarush.island.entity.Organism;
 import com.javarush.island.entity.animals.Animal;
-import com.javarush.island.entity.animals.plants.Plant;
+import com.javarush.island.entity.plants.Plant;
 import com.javarush.island.model.Statistic;
+import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-
+@RequiredArgsConstructor
 public class Simulation {
     private final Island island;
     private final Statistic statistic;

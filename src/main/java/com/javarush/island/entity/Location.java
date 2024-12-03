@@ -1,11 +1,10 @@
 package com.javarush.island.entity;
 
 import com.javarush.island.entity.animals.Animal;
-import com.javarush.island.entity.animals.plants.Plant;
+import com.javarush.island.entity.plants.Plant;
 import com.javarush.island.model.Direction;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Setter
 @Getter
-@ToString
 public class Location {
     private int coordinateX;
     private int coordinateY;
@@ -34,15 +32,8 @@ public class Location {
         organisms.remove(organism);
     }
 
-    public Location getCurrentLocationOfOrganism(Organism organism) {
-        if (organisms.contains(organism)) {
-            return this;
-        }
-        return null;
-    }
-
     public void setNeighbor(Direction direction, Location neighbor) {
-        neighbors.put(direction, neighbor);
+        neighbors.put(direction, neighbor); // Устанавливаем соседа по направлению
     }
 
     public Location getNeighbor(Direction direction) {

@@ -42,14 +42,19 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
 
         if (this instanceof Herbivores) {
             currentLocation.getPlants().stream()
-                    .filter(plant -> plant.getQuantity() > 0)
+                    .filter(plant -> plant.getWeight() > 0)
                     .findFirst()
                     .ifPresentOrElse(plant -> {
+                        plant.decreaseWeight();
+                        currentLocation.removeOrganism(plant);
                           //  System.out.println(this.getName() + " ate up a plant.");
                             this.setActualSatiety(increaseSatiety());
                             this.increaseWeight();
-                            plant.decreaseQuantity();
-                            currentLocation.removeOrganism(plant);
+
+                        if (plant.getWeight() < plant.getWeight() / 2) {
+                            System.out.println("plants eaten");
+                        }
+                //        currentLocation.removeOrganism(plant);
                     }, () -> handleFailedEating(currentLocation));
         } else if (this instanceof Predators) {
 
@@ -59,7 +64,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                     .findAny()
                     .ifPresentOrElse(prey -> {
                         if (ThreadLocalRandom.current().nextInt(100) > getProbability(this, prey)) {
-                           // System.out.println(this.getName() + " ate up " + prey.getName());
+                            System.out.println(this.getName() + " ate up " + prey.getName());
                             this.setActualSatiety(increaseSatiety());
                             this.increaseWeight();
                             currentLocation.removeOrganism(prey);
@@ -72,11 +77,11 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     private void handleFailedEating(Location currentLocation) {
-       // System.out.println(this.getName() + " found nothing to eat.");
+        System.out.println(this.getName() + " found nothing to eat.");
         this.setActualSatiety(decreaseSatiety());
         this.decreaseWeight();
         if (this.getActualSatiety() <= 0 || this.getWeight() <= 0) {
-          //  System.out.println(this.getName() + " died of hunger.");
+            System.out.println(this.getName() + " died of hunger.");
             if (currentLocation != null) {
                 currentLocation.removeOrganism(this);
             }
@@ -84,7 +89,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     public void increaseWeight() {
-        this.setWeight(this.getWeight() + this.getWeight() / 2);
+        this.setWeight(this.getWeight() + this.getWeight() / 1.5);
     }
 
     public void decreaseWeight() {
@@ -120,6 +125,7 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
               //  System.out.println(this.getName() + " cannot move to a full location.");
                 break;
             }
+            this.setActualSatiety(increaseSatiety());
             stepsRemaining--;
         }
     }
@@ -143,17 +149,17 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                 .filter(animal -> animal.getClass().equals(this.getClass()))
                 .toList();
 
-        if (sameSpecies.size() > 1) {
+        if (sameSpecies.size() > 1 && actualSatiety > actualSatiety / 2) {
             try {
                 Animal offspring = (Animal) this.clone();
                 currentLocation.addOrganism(offspring);
-             //   System.out.println(this.getName() + "the animal has successfully reproduced");
+                //   System.out.println(this.getName() + " the animal has successfully reproduced");
             } catch (CloneNotSupportedException e) {
-              //  System.out.println(this.getName() + "the animal has not reproduced");
+                //  System.out.println(this.getName() + " the animal has not reproduced");
             }
 
         } else {
-          //  System.out.println(this.getName() + " the animal has not couple");
+            //  System.out.println(this.getName() + " the animal has not couple");
         }
     }
 }

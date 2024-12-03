@@ -4,13 +4,12 @@ import com.javarush.island.configuration.IslandConfig;
 import lombok.experimental.UtilityClass;
 
 @UtilityClass
-public class IslandUtil {
+public class IslandConfigUtil {
     private static  IslandConfig islandConfig;
-
 
     public static IslandConfig getIslandConfig() {
         if (islandConfig == null) {
-            synchronized (IslandUtil.class) {
+            synchronized (IslandConfigUtil.class) {
                 if (islandConfig == null) {
                     islandConfig = new IslandConfig("island_settings.yaml");
                 }

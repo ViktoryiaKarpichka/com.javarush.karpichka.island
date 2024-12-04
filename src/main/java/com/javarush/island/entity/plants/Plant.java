@@ -9,8 +9,6 @@ import com.javarush.island.model.TypeOrganism;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 @YamlOrganism(key = "Plant")
 @YamlEatingProbability(key = "Plant",value = TypeOrganism.PLANT)
 @Getter
@@ -30,13 +28,11 @@ public class Plant extends Organism implements Reproducible {
         if (!currentLocation.canAddOrganism(this)) {
             return;
         }
-        if (ThreadLocalRandom.current().nextDouble() < 0.8) {
             try {
                 Plant offspring = (Plant) this.clone();
                 currentLocation.addOrganism(offspring);
             } catch (CloneNotSupportedException e) {
                 throw new RuntimeException();
-            }
         }
     }
 }

@@ -42,20 +42,17 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
         if (this instanceof Herbivores) {
             currentLocation.getPlants().stream()
                     .filter(plant -> plant.getWeight() > 0)
-                    .skip(ThreadLocalRandom.current().nextInt(currentLocation.getAnimals().size()))
                     .findFirst()
                     .ifPresentOrElse(plant -> {
-                      //  plant.decreaseWeight();
+                        plant.decreaseWeight();
                         currentLocation.removeOrganism(plant);
                         this.setActualSatiety(increaseSatiety(plant));
-                        this.increaseWeight(plant);
                     }, () -> handleFailedEating(currentLocation));
         } else if (this instanceof Predators) {
 
             currentLocation.getAnimals().stream()
                     .filter(prey -> prey != this && canEat(this, prey))
-                  //  .skip(ThreadLocalRandom.current().nextInt(currentLocation.getAnimals().size()))
-                    .findAny()
+                    .findFirst()
                     .ifPresentOrElse(prey -> {
                         if (ThreadLocalRandom.current().nextInt(100) > getProbability(this, prey)) {
                             this.setActualSatiety(increaseSatiety(prey));
@@ -100,25 +97,17 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     @Override
     public void move(Location currentLocation) {
 
-        int stepsRemaining = ThreadLocalRandom.current().nextInt(0, maxSpeed + 1);
+        int stepsRemaining = ThreadLocalRandom.current().nextInt( maxSpeed + 1);
 
         while (stepsRemaining > 0) {
             Direction direction = chooseDirection();
             Location targetLocation = currentLocation.getNeighbor(direction);
-
-            if (targetLocation == null) {
-                break;
-            }
-
-            if (targetLocation.canAddOrganism(this)) {
-                currentLocation.removeOrganism(this);
-                targetLocation.addOrganism(this);
-                currentLocation = targetLocation;
-            } else {
-                break;
-            }
-            this.setActualSatiety(increaseSatiety(this));
-            stepsRemaining--;
+         if (targetLocation != null && targetLocation.canAddOrganism(this)) {
+             currentLocation.removeOrganism(this);
+             targetLocation.addOrganism(this);
+             currentLocation = targetLocation;
+         }
+         stepsRemaining--;
         }
     }
 

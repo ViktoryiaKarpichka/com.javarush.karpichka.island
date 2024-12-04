@@ -19,10 +19,6 @@ public class Plant extends Organism implements Reproducible {
         super(name, weight, maxCountPerCell);
     }
 
-    public void decreaseWeight() {
-        this.setWeight(this.getWeight() / 2);
-    }
-
     @Override
     public void reproduce(Location currentLocation) {
         if (!currentLocation.canAddOrganism(this)) {

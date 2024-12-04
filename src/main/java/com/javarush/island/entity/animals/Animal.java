@@ -18,6 +18,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import static com.javarush.island.configuration.EatingProbabilityConfig.canEat;
 import static com.javarush.island.configuration.EatingProbabilityConfig.getProbability;
+import static com.javarush.island.util.AnimalUtil.SATIETY_REDUCTION;
 
 @Setter
 @Getter
@@ -40,23 +41,23 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
         EatingProbabilityUtil.getEatingProbabilityConfig();
 
         if (this instanceof Herbivores) {
-            currentLocation.getPlants().stream()
-                    .filter(plant -> plant.getWeight() > 0)
-                    .findFirst()
-                    .ifPresentOrElse(plant -> {
-                        plant.decreaseWeight();
-                        currentLocation.removeOrganism(plant);
-                        this.setActualSatiety(increaseSatiety(plant));
-                    }, () -> handleFailedEating(currentLocation));
+                currentLocation.getPlants().stream()
+                        .filter(plant -> plant.getWeight() > 0)
+                        .findFirst()
+                        .ifPresentOrElse(plant -> {
+                            if (ThreadLocalRandom.current().nextDouble() < 0.3) {
+                                currentLocation.removeOrganism(plant);
+                           }
+                            this.setActualSatiety(increaseSatiety(plant));
+                        }, () -> handleFailedEating(currentLocation));
         } else if (this instanceof Predators) {
-
             currentLocation.getAnimals().stream()
                     .filter(prey -> prey != this && canEat(this, prey))
                     .findFirst()
                     .ifPresentOrElse(prey -> {
-                        if (ThreadLocalRandom.current().nextInt(100) > getProbability(this, prey)) {
+                        if (ThreadLocalRandom.current().nextInt(100) < getProbability(this, prey)) {
                             this.setActualSatiety(increaseSatiety(prey));
-                            this.increaseWeight(prey);
+                            increaseWeight(prey);
                             currentLocation.removeOrganism(prey);
                         } else {
                             handleFailedEating(currentLocation);
@@ -76,14 +77,14 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     }
 
     public void increaseWeight(Organism o) {
-        double weightGain = o.getWeight() * 0.35;
+        double weightGain = o.getWeight() * 0.2;
         this.setWeight(this.getWeight() + weightGain);
     }
 
     public void decreaseWeight() {
-        double weightLoss = this.getWeight() * 0.2; // Потеря 5% веса за цикл
+        double weightLoss = this.getWeight() * 0.5; //
         this.setWeight(this.getWeight() - weightLoss);
-        if (this.getWeight() < 0) {
+        if (this.getWeight() <= 0) {
             this.setWeight(0);
         }
     }
@@ -97,17 +98,27 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
     @Override
     public void move(Location currentLocation) {
 
-        int stepsRemaining = ThreadLocalRandom.current().nextInt( maxSpeed + 1);
+        int stepsRemaining = ThreadLocalRandom.current().nextInt(0, maxSpeed + 1);
 
         while (stepsRemaining > 0) {
             Direction direction = chooseDirection();
             Location targetLocation = currentLocation.getNeighbor(direction);
-         if (targetLocation != null && targetLocation.canAddOrganism(this)) {
-             currentLocation.removeOrganism(this);
-             targetLocation.addOrganism(this);
-             currentLocation = targetLocation;
-         }
-         stepsRemaining--;
+
+            if (targetLocation == null) {
+                break;
+            }
+
+            if (targetLocation.canAddOrganism(this)) {
+                currentLocation.removeOrganism(this);
+                targetLocation.addOrganism(this);
+                currentLocation = targetLocation;
+            } else {
+                break;
+            }
+            this.setActualSatiety(decreaseSatiety(this));
+            decreaseWeight();
+            stepsRemaining--;
+
         }
     }
 
@@ -129,12 +140,12 @@ public abstract class Animal extends Organism implements Eatable, Moveable, Repr
                 .filter(animal -> animal.getClass().equals(this.getClass()))
                 .toList();
 
-        if (sameSpecies.size() > 1 && actualSatiety > maxSatiety * 0.75) { // satiety must be > 85%
-            if (ThreadLocalRandom.current().nextDouble() < 0.8) { // 50% chance for repl
+        if (sameSpecies.size() > 1 && actualSatiety == maxSatiety ) { //only with maxSatiety
+            if (ThreadLocalRandom.current().nextDouble() < 0.5) { // 50% chance for repl
                 try {
                     Animal offspring = (Animal) this.clone();
-                    offspring.setWeight(offspring.getWeight() * 0.5); // offspring weight and satiety less < 70%
-                    offspring.setActualSatiety(offspring.getMaxSatiety() * 0.5);
+                    offspring.setWeight(offspring.getWeight() / 2); // offspring weight and satiety less then offspring
+                    offspring.setActualSatiety(offspring.getMaxSatiety() * SATIETY_REDUCTION);
                     currentLocation.addOrganism(offspring);
                 } catch (CloneNotSupportedException e) {
                     System.out.println(e.getMessage());

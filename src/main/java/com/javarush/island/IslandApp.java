@@ -8,8 +8,10 @@ public class IslandApp {
         Island island = new Island();
         island.createLocations();
         island.fillingLocations();
+    //    island.debugIslandContent();
 
         Simulation simulation = new Simulation(island);
-        simulation.run(5);
+        simulation.run(100);
+     //   island.debugIslandContent();
     }
 }

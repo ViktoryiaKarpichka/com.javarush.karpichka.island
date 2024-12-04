@@ -10,12 +10,15 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Setter
 @Getter
-public class Location {
+public class Location implements Runnable{
     private int coordinateX;
     private int coordinateY;
+    private final Lock lock = new ReentrantLock(true);
     private final List<Organism> organisms = new CopyOnWriteArrayList<>();
     private final Map<Direction, Location> neighbors = new EnumMap<>(Direction.class);
 
@@ -24,16 +27,16 @@ public class Location {
         this.coordinateY = coordinateY;
     }
 
-    public void addOrganism(Organism organism) {
+    public synchronized void addOrganism(Organism organism) {
         organisms.add(organism);
     }
 
-    public void removeOrganism(Organism organism) {
+    public synchronized void removeOrganism(Organism organism) {
         organisms.remove(organism);
     }
 
     public void setNeighbor(Direction direction, Location neighbor) {
-        neighbors.put(direction, neighbor); // Устанавливаем соседа по направлению
+        neighbors.put(direction, neighbor);
     }
 
     public Location getNeighbor(Direction direction) {
@@ -57,5 +60,24 @@ public class Location {
                 .filter(o -> o.getClass().equals(organism.getClass()))
                 .count();
         return sameTypeCount < organism.getMaxCountPerCell();
+    }
+
+    @Override
+    public void run() {
+        lock.lock();
+        try {
+            getAnimals().forEach(animal -> {
+                try {
+                    animal.eat(this);
+                    animal.reproduce(this);
+                    animal.move(this);
+                } catch (Exception e) {
+                    System.err.println("Error processing animal: " + animal.getName() + " at (" + coordinateX + ", " + coordinateY + ")");
+                    System.out.println(e.getMessage());
+                }
+            });
+        } finally {
+            lock.unlock();
+        }
     }
 }

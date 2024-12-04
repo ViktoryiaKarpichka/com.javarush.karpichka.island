@@ -27,11 +27,6 @@ public class Island {
     }
 
     public void createLocations() {
-//        for (int row = 0; row < lengthIsland; row++) {
-//            for (int column = 0; column < widthIsland; column++) {
-//                locations[row][column] = new Location(row, column);
-//            }
-//        }
         for (int row = 0; row < lengthIsland; row++) {
             int rowLength = ThreadLocalRandom.current().nextInt(1, widthIsland + 1); // Задаем случайную длину строки
             locations[row] = new Location[rowLength];
@@ -42,33 +37,24 @@ public class Island {
     }
 
     public void linkNeighbors() {
-//        for (int row = 0; row < lengthIsland; row++) {
-//            for (int column = 0; column < widthIsland; column++) {
-//                Location current = locations[row][column];
-//                if (row > 0) current.setNeighbor(Direction.UP, locations[row - 1][column]);
-//                if (row < lengthIsland - 1) current.setNeighbor(Direction.DOWN, locations[row + 1][column]);
-//                if (column > 0) current.setNeighbor(Direction.LEFT, locations[row][column - 1]);
-//                if (column < widthIsland - 1) current.setNeighbor(Direction.RIGHT, locations[row][column + 1]);
-//            }
-//        }
-            for (int row = 0; row < locations.length; row++) {
-                for (int column = 0; column < locations[row].length; column++) {
-                    Location current = locations[row][column];
-                    if (row > 0 && column < locations[row - 1].length) {
-                        current.setNeighbor(Direction.UP, locations[row - 1][column]);
-                    }
-                    if (row < locations.length - 1 && column < locations[row + 1].length) {
-                        current.setNeighbor(Direction.DOWN, locations[row + 1][column]);
-                    }
-                    if (column > 0) {
-                        current.setNeighbor(Direction.LEFT, locations[row][column - 1]);
-                    }
-                    if (column < locations[row].length - 1) {
-                        current.setNeighbor(Direction.RIGHT, locations[row][column + 1]);
-                    }
+        for (int row = 0; row < locations.length; row++) {
+            for (int column = 0; column < locations[row].length; column++) {
+                Location current = locations[row][column];
+                if (row > 0 && column < locations[row - 1].length) {
+                    current.setNeighbor(Direction.UP, locations[row - 1][column]);
+                }
+                if (row < locations.length - 1 && column < locations[row + 1].length) {
+                    current.setNeighbor(Direction.DOWN, locations[row + 1][column]);
+                }
+                if (column > 0) {
+                    current.setNeighbor(Direction.LEFT, locations[row][column - 1]);
+                }
+                if (column < locations[row].length - 1) {
+                    current.setNeighbor(Direction.RIGHT, locations[row][column + 1]);
                 }
             }
         }
+    }
 
     public void fillingLocations() {
         for (int row = 0; row < locations.length; row++) {
@@ -94,28 +80,15 @@ public class Island {
             }
         }
     }
-        public void debugIslandContent() {
-            for (int row = 0; row < locations.length; row++) {
-                System.out.println("Row " + row + " has " + locations[row].length + " columns.");
-                for (int column = 0; column < locations[row].length; column++) {
-                    Location location = locations[row][column];
-                    System.out.println("Cell (" + row + ", " + column + ") contains: " +
-                            location.getAnimals().size() + " animals, " +
-                            location.getPlants().size() + " plants.");
-                }
+    public void debugIslandContent() {
+        for (int row = 0; row < locations.length; row++) {
+            System.out.println("Row " + row + " has " + locations[row].length + " columns.");
+            for (int column = 0; column < locations[row].length; column++) {
+                Location location = locations[row][column];
+                System.out.println("Cell (" + row + ", " + column + ") contains: " +
+                        location.getAnimals().size() + " animals, " +
+                        location.getPlants().size() + " plants.");
             }
         }
-    public int getRowLength(int row) {
-        if (row >= 0 && row < locations.length) {
-            return locations[row].length;
-        }
-        throw new IllegalArgumentException("Invalid row: " + row);
-    }
-
-    public Location getLocation(int x, int y) {
-        if (y >= 0 && y < locations.length && locations[y] != null && x >= 0 && x < locations[y].length) {
-            return locations[y][x];
-        }
-        throw new IllegalArgumentException("Invalid coordinates: x=" + x + ", y=" + y);
     }
 }

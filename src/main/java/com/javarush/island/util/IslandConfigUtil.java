@@ -5,6 +5,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class IslandConfigUtil {
+    public static final int LIFE_CYCLE = 10000;
     private static  IslandConfig islandConfig;
 
     public static IslandConfig getIslandConfig() {
